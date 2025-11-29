@@ -93,7 +93,7 @@ def show_marks():
 
 def main():
     while True:
-        print("\n---Student Mark Management ---\n")
+        print("\n--- Student Mark Management ---\n")
         print("0. Exit Program")
         print("1. Input Student Info")
         print("2. Input Course Info")
