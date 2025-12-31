@@ -1,6 +1,7 @@
 from domains.Students import Student
 from domains.Courses import Course
-import zipfile
+import pickle
+import gzip
 import os
 def input_student_info():
     students = []
@@ -109,37 +110,23 @@ def input_marks(courses, students):
             print("Invalid input")
 
 #Compress all files '.txt' into 'students.dat'
-def compress_file():
-    files_to_compress = ['students.txt', 'courses.txt', 'marks.txt']
-    output_dat_file = 'students.dat'
+def save_data(students, courses, marks):
+    data = {'students': students, 'courses': courses, 'marks': marks}
     try:
-        #Open .dat file in 'w' (write) mode
-        with zipfile.ZipFile(output_dat_file, 'w', zipfile.ZIP_DEFLATED) as zipf:
-            for file in files_to_compress:
-                #check if file exist before adding
-                if os.path.exists(file):
-                    print(f"Adding {file} to {output_dat_file}...")
-                    #add file to archive
-                    #write(): file name as will appear inside archive
-                    zipf.write(file, os.path.basename(file))
-                else:
-                    print(f"Error: {file} not found.")
-        print(f"Successfully created the archive: {output_dat_file}")
-    
-    except FileNotFoundError as e:
-        print(f"An error occurred: {e}")
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
-
-def decompress_and_load():
-    dat_file = 'students.dat'
-    if os.path.exists(dat_file):
-        print(f"Found {dat_file}. Extracting data...")
+        with gzip.open('students.dat', 'wb') as f:
+            pickle.dump(data, f)
+        print("\n--- All data successfully pickle and compressed into 'students.dat'")
+    except Exception:
+        print("Error saving data")
+def load_data():
+    if os.path.exists('students.dat'):
         try:
-            with zipfile.ZipFile(dat_file, 'r') as zipf:
-                zipf.extractall()
-            print("Data extracted successfully!")
+            with gzip.open('students.dat', 'rb') as f:
+                data = pickle.load(f)
+            print("--- Data loaded and decompressed successfully ---")
+            return data['students'], data['courses'], data['marks']
         except Exception:
-            print("Error extracting data")
-    else:
-        print(f"\nCheck dailed: '{dat_file}' does not exist!")
+            print("Error loading data")
+    
+    print("No existing 'students.dat' found")
+    return [], [], {}   #start with empty list

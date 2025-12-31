@@ -1,4 +1,4 @@
-from input import input_student_info, input_course_info, input_marks, compress_file
+from input import input_student_info, input_course_info, input_marks, save_data, load_data
 from output import list_students, list_courses, show_marks
 from domains.Students import Student
 from domains.Courses import Course
@@ -34,12 +34,9 @@ def sort_students(students):
     students.sort(key = lambda s: s.gpa, reverse = True)
 
 def main():
-    students = []
-    courses = []
-    marks = {}
+    students, courses, marks = load_data()
     while True:
         print("\n--- Student Mark Management ---\n")
-        print("0. Exit Program")
         print("1. Input Student Info")
         print("2. Input Course Info")
         print("3. Input Marks")
@@ -47,13 +44,11 @@ def main():
         print("5. List Courses")
         print("6. Show Course Marks")
         print("7. Students GPA sorted list")
+        print("8. Exit program")
 
         try:
             opt = int(input("\nSelect an option: "))
 
-            if opt == 0:    
-                print("End Program!")   
-                break
             if opt == 1:  
                 s = input_student_info()
                 students.extend(s)      #add student's info into list
@@ -78,9 +73,12 @@ def main():
                 GPA(students, courses, marks)
                 sort_students(students)
                 list_students(students)
-                
+            elif opt == 8:
+                save_data(students, courses, marks)
+                print("End program!")
+                break
+
         except ValueError:
             print("Invalid option. Please enter any option from 0-7")
-    compress_file()
-    print("All data archived. Done!")
+    
 main()
