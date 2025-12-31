@@ -1,4 +1,4 @@
-from input import input_student_info, input_course_info, input_marks
+from input import input_student_info, input_course_info, input_marks, compress_file
 from output import list_students, list_courses, show_marks
 from domains.Students import Student
 from domains.Courses import Course
@@ -81,5 +81,6 @@ def main():
                 
         except ValueError:
             print("Invalid option. Please enter any option from 0-7")
-
+    compress_file()
+    print("All data archived. Done!")
 main()
